@@ -1,6 +1,6 @@
 # Network Conditions Emulator
 
-This script artificially limits bandwidth, delay and loss rate on a selected interface.
+This script artificially limits bandwidth, delay and loss rate on a selected interface on both downlink and uplink.
 For information and suggestions please write to:
 martino.trevisan@polito.it
 
