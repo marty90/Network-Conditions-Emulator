@@ -27,14 +27,24 @@ where:
 *  `<input_value>` is the parameter for the command in the incoming direction (e.g. all incoming packets delayed by 50ms).
 *  `<output_value>` is the parameter for the command in the outgoing direction (e.g. all outgoing packets have loss probability of 10%).
 
-`<input_value>`' and `<output_value>` must specify the right dimension in a `tc` compatible way (e.g., 10ms 2% or 10mbit).
+`<input_value>` and `<output_value>` must specify the right dimension in a `tc` compatible way (e.g., 10ms 2% or 10mbit).
+To erase a previously set limit, set these parameters to `-`
 
 For example you can write:
 ```
 ./net_cond_em.sh eth0 rate 2mbit 1mbit
 ```
-to artificially limit download rate to 2mbps and uplink to 1mbps
+to artificially limit download rate to 2mbps and uplink to 1mbps.
+You can delete the limit by executing:
+```
+./net_cond_em.sh eth0 rate - - 
+```
 
 
+Limitations
+===========
 
+So far it is not possible to simulate multiple conditions toghether.
+A new execution to the script will erase previous runs.
+For example, it is not possible to enforce rate and delay at the same time.
 
