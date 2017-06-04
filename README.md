@@ -3,6 +3,7 @@
 This script artificially limits bandwidth, delay and loss rate on a selected interface on both downlink and uplink.
 For information and suggestions please write to:
 martino.trevisan@polito.it
+If you need a more sophisticated tool to emulate network conditions, you can consider [this](https://github.com/facebook/augmented-traffic-control).
 
 Dependencies
 ============
