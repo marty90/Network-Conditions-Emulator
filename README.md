@@ -1,51 +1,51 @@
 # Network Conditions Emulator
 
-This script artificially limits bandwidth, delay and loss rate on a selected interface on both downlink and uplink.
-For information and suggestions please write to:
-martino.trevisan@polito.it
-If you need a more sophisticated tool to emulate network conditions, you can consider [this](https://github.com/facebook/augmented-traffic-control).
+This script artificially limits bandwidth, delay and loss rate on selected interfaces.
+It allows traffic shaping on both downlink and uplink. It can enforce shaping on multiple interfaces at a time.
 
-Dependencies
-============
-This is a bash script to be used in a Linux environment.
-It depends on the the package `tc` 
+For information and suggestions please write to: martino.trevisan@polito.it
 
-Usage
-=====
+## Dependencies
 
-As first, you must initialize the environment:
+This is a bash script to be used in a *Linux* environment.
+It depends on the the package `tc`. Under the hood it uses the kernel module `ifb`.
+
+## Usage
+
+To start traffic shaping, you can run:
 ```
-./net_cond_em.sh init
-```
-
-Then, you can run commands in this way:
-```
-./net_cond_em.sh <interface> <command> <input_value> <output_value>
+sudo ./network_emulator.sh <iface>:<downspeed>:<upspeed>:<rtt>:<loss>
 ```
 where:
-*  `<interface>` is the target physical interface you want to alterate
-*  `<command>` is the limit you want to enforce. It can be `delay`, `loss` and `rate`.
-*  `<input_value>` is the parameter for the command in the incoming direction (e.g. all incoming packets delayed by 50ms).
-*  `<output_value>` is the parameter for the command in the outgoing direction (e.g. all outgoing packets have loss probability of 10%).
+*  `<iface>` is the target physical interface you want to alterate
+*  `<downspeed>` is the downlink capacity. Unit must be present, e.g., 20mbit.
+*  `<upspeed>` is the uplink capacity. Unit must be present, e.g., 10mbit.
+*  `<rtt>` is the RTT. Unit must be present, e.g., 50ms. It is enforced on the uplink.
+*  `<loss>` is the loss probability. Must be followed by %, e.g., 10%. Enforced on both up and down link.
 
-`<input_value>` and `<output_value>` must specify the right dimension in a `tc` compatible way (e.g., 10ms 2% or 10mbit).
-To erase a previously set limit, set these parameters to `-`
-
-For example you can write:
+To remove all traffic shaping rules, use:
 ```
-./net_cond_em.sh eth0 rate 2mbit 1mbit
-```
-to artificially limit download rate to 2mbps and uplink to 1mbps.
-You can delete the limit by executing:
-```
-./net_cond_em.sh eth0 rate - - 
+sudo ./network_emulator.sh remove
 ```
 
+# Example
 
-Limitations
-===========
+Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
+```
+sudo ./network_emulator.sh eth0:20mbit:5mbit:20ms:0%
+```
 
-So far it is not possible to simulate multiple conditions toghether.
-A new execution to the script will erase previous runs.
-For example, it is not possible to enforce rate and delay at the same time.
+Enforce 100ms RTT on `eth0`.
+```
+sudo ./network_emulator.sh eth0:::20ms:
+```
+Note that you can omit parameters that you don't want to shape.
+
+
+Enforce 1% packet loss on `docker0`, `docker1` and `docker2` (if you are using docker container engine)
+
+```
+sudo ./network_emulator.sh docker0::::1% docker1::::1% docker2::::1%
+```
+
 
