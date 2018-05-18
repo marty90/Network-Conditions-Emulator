@@ -23,12 +23,16 @@ where:
 *  `<rtt>` is the RTT. Unit must be present, e.g., 50ms. It is enforced on the uplink.
 *  `<loss>` is the loss probability. Must be followed by %, e.g., 10%. Enforced on both up and down link.
 
+You can write multiple `<iface>:<downspeed>:<upspeed>:<rtt>:<loss>` to configure shaping on multiple interfaces. Under the hood it creates multiple virtual `ifb` interfaces to shape both down and uplink traffic.
+
+You can omit one or more of `<downspeed>`, `<upspeed>`, `<rtt>`, `<loss>` to avoid enforcing shaping for those parameters. E.g., you can write a command for enforcing only RTT with: `<iface>:::<rtt>:`, like `wlan0:::50ms:`.
+
 To remove all traffic shaping rules, use:
 ```
 sudo ./network_emulator.sh remove
 ```
 
-# Example
+# Examples
 
 Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
 ```
