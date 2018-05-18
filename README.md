@@ -1,16 +1,16 @@
 # Network Conditions Emulator
 
-This script artificially limits bandwidth, delay and loss rate on selected interfaces.
+This bash script artificially limits bandwidth, delay and loss rate on selected interfaces.
 It allows traffic shaping on both downlink and uplink. It can enforce shaping on multiple interfaces at a time.
 
 For information and suggestions please write to: martino.trevisan@polito.it
 
-## Dependencies
+## 1. Dependencies
 
 This is a bash script to be used in a *Linux* environment.
 It depends on the the package `tc`. Under the hood it uses the kernel module `ifb`.
 
-## Usage
+## 2. Usage
 
 To start traffic shaping, you can run:
 ```
@@ -32,21 +32,21 @@ To remove all traffic shaping rules, use:
 sudo ./network_emulator.sh remove
 ```
 
-# Examples
+## 3. Examples
 
-*1.* Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
+**1.** Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
 ```
 sudo ./network_emulator.sh eth0:20mbit:5mbit:20ms:0%
 ```
 
-*2.* Enforce 100ms RTT on `eth0`.
+**2.** Enforce 100ms RTT on `eth0`.
 ```
 sudo ./network_emulator.sh eth0:::20ms:
 ```
 Note that you can omit parameters that you don't want to shape.
 
 
-*3.* Enforce 1% packet loss on `docker0`, `docker1` and `docker2` (if you are using docker container engine)
+**3.** Enforce 1% packet loss on `docker0`, `docker1` and `docker2` (if you are using docker container engine)
 
 ```
 sudo ./network_emulator.sh docker0::::1% docker1::::1% docker2::::1%
