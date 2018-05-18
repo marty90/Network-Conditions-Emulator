@@ -34,19 +34,19 @@ sudo ./network_emulator.sh remove
 
 # Examples
 
-Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
+*1.* Enforce 20mbit download, 5mbit upload, 20ms RTT and no packet loss on `eth0`.
 ```
 sudo ./network_emulator.sh eth0:20mbit:5mbit:20ms:0%
 ```
 
-Enforce 100ms RTT on `eth0`.
+*2.* Enforce 100ms RTT on `eth0`.
 ```
 sudo ./network_emulator.sh eth0:::20ms:
 ```
 Note that you can omit parameters that you don't want to shape.
 
 
-Enforce 1% packet loss on `docker0`, `docker1` and `docker2` (if you are using docker container engine)
+*3.* Enforce 1% packet loss on `docker0`, `docker1` and `docker2` (if you are using docker container engine)
 
 ```
 sudo ./network_emulator.sh docker0::::1% docker1::::1% docker2::::1%
