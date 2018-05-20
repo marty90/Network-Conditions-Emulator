@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Default values
-DEFAULT_DOWNLOAD="1000mbit"
-DEFAULT_UPLOAD="1000mbit"
+DEFAULT_DOWNLOAD="40000mbit"
+DEFAULT_UPLOAD="40000mbit"
 DEFAULT_RTT="0ms"
 DEFAULT_LOSS="0%"
 
@@ -101,7 +101,7 @@ else
         # INCOMING
         # Speed
         go tc qdisc add dev $VIRTUAL root handle 2: htb default 10
-        go tc class add dev $VIRTUAL parent 2:  classid 2:1  htb rate 1000Mbps
+        go tc class add dev $VIRTUAL parent 2:  classid 2:1  htb rate $DEFAULT_DOWNLOAD
         go tc class add dev $VIRTUAL parent 2:1 classid 2:10 htb rate $DOWNLOAD
         # Loss rate 
         go tc qdisc add dev $VIRTUAL parent 2:10  handle 20: netem loss $LOSS
@@ -110,7 +110,7 @@ else
         # OUTGOING
         # Speed
         go tc qdisc add dev $INTERFACE root handle 1: htb default 11
-        go tc class add dev $INTERFACE parent 1:  classid 1:1  htb rate 1000Mbps
+        go tc class add dev $INTERFACE parent 1:  classid 1:1  htb rate $DEFAULT_UPLOAD
         go tc class add dev $INTERFACE parent 1:1 classid 1:11 htb rate $UPLOAD
         # Delay
         go tc qdisc add dev $INTERFACE parent 1:11 handle 10: netem delay $RTT loss $LOSS
