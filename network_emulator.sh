@@ -18,7 +18,7 @@ REMOVE=false
 RULES=""
 
 for ARG in "$@" ; do
-    if [ "$ARG" = "remove" ] ; then 
+    if [ "$ARG" = "remove" ] ; then
         REMOVE=true
     elif [ "$ARG" = "-h" ] || [ "$ARG" = "--help" ] ; then
         echo "network_emulator.sh COMMAND..."
@@ -103,9 +103,10 @@ else
         go tc qdisc add dev $VIRTUAL root handle 2: htb default 10
         go tc class add dev $VIRTUAL parent 2:  classid 2:1  htb rate $DEFAULT_DOWNLOAD
         go tc class add dev $VIRTUAL parent 2:1 classid 2:10 htb rate $DOWNLOAD
-        # Loss rate 
-        go tc qdisc add dev $VIRTUAL parent 2:10  handle 20: netem loss $LOSS
-
+        # Loss rate
+        if [ "$LOSS" != "$DEFAULT_LOSS" ] ; then
+            go tc qdisc add dev $VIRTUAL parent 2:10  handle 20: netem loss $LOSS
+        fi
 
         # OUTGOING
         # Speed
@@ -113,7 +114,9 @@ else
         go tc class add dev $INTERFACE parent 1:  classid 1:1  htb rate $DEFAULT_UPLOAD
         go tc class add dev $INTERFACE parent 1:1 classid 1:11 htb rate $UPLOAD
         # Delay
-        go tc qdisc add dev $INTERFACE parent 1:11 handle 10: netem delay $RTT loss $LOSS
+        if [ "$LOSS" != "$DEFAULT_LOSS" ] ; then
+            go tc qdisc add dev $INTERFACE parent 1:11 handle 10: netem delay $RTT loss $LOSS
+        fi
         # Loss
 
         # Increment Counter
@@ -123,6 +126,3 @@ else
 
 
 fi
-
-
-
