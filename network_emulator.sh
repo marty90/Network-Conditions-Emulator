@@ -6,6 +6,8 @@ DEFAULT_UPLOAD="40000mbit"
 DEFAULT_RTT="0ms"
 DEFAULT_LOSS="0%"
 
+BURST=32kbit
+
 # Utility Function
 function go() {
     #echo "$*"
@@ -100,24 +102,21 @@ else
 
         # INCOMING
         # Speed
-        go tc qdisc add dev $VIRTUAL root handle 2: htb default 10
-        go tc class add dev $VIRTUAL parent 2:  classid 2:1  htb rate $DEFAULT_DOWNLOAD
-        go tc class add dev $VIRTUAL parent 2:1 classid 2:10 htb rate $DOWNLOAD
+        go tc qdisc add dev $VIRTUAL root handle 2: tbf rate $DOWNLOAD burst $BURST limit $BURST
         # Loss rate
         if [ "$LOSS" != "$DEFAULT_LOSS" ] ; then
-            go tc qdisc add dev $VIRTUAL parent 2:10  handle 20: netem loss $LOSS
+            go tc qdisc add dev $VIRTUAL parent 2:  handle 20: netem loss $LOSS
         fi
 
         # OUTGOING
         # Speed
-        go tc qdisc add dev $INTERFACE root handle 1: htb default 11
-        go tc class add dev $INTERFACE parent 1:  classid 1:1  htb rate $DEFAULT_UPLOAD
-        go tc class add dev $INTERFACE parent 1:1 classid 1:11 htb rate $UPLOAD
-        # Delay
+        go tc qdisc add dev $INTERFACE root handle 1: tbf rate $UPLOAD burst $BURST limit $BURST
+        # Delay and Loss rate
         if [ "$LOSS" != "$DEFAULT_LOSS" ] ; then
-            go tc qdisc add dev $INTERFACE parent 1:11 handle 10: netem delay $RTT loss $LOSS
+            go tc qdisc add dev $INTERFACE parent 1: handle 10: netem delay $RTT loss $LOSS
+        else
+            go tc qdisc add dev $INTERFACE parent 1: handle 10: netem delay $RTT
         fi
-        # Loss
 
         # Increment Counter
         i=$(( $i + 1 ))
