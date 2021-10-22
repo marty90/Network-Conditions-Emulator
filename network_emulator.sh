@@ -47,7 +47,7 @@ if [ "$REMOVE" = true ]; then
     go rmmod ifb 2>/dev/null
 
     # Remove all TC policies
-    for INTERFACE in $( ifconfig | grep HWaddr | grep -v ifb | cut -d " " -f 1 ) ; do
+    for INTERFACE in $( ifconfig -a | sed 's/[: \t].*//;/^$/d' | grep -v ifb ) ; do
 
         go tc qdisc del root dev $INTERFACE 2>/dev/null
         go tc qdisc del dev $INTERFACE handle ffff: ingress 2>/dev/null
