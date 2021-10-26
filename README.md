@@ -10,6 +10,8 @@ For information and suggestions please write to: martino.trevisan@polito.it
 This is a bash script to be used in a *Linux* environment.
 It depends on the the package `tc`. Under the hood it uses the kernel module `ifb`.
 
+**Warning**: if you are using `nftables`, traffic shaping on the Docker interfaces might not work due to routing/NAT issues.
+
 ## 2. Usage
 
 To start traffic shaping, you can run:
