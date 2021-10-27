@@ -6,7 +6,7 @@ DEFAULT_UPLOAD="40000mbit"
 DEFAULT_RTT="0ms"
 DEFAULT_LOSS="0%"
 
-BURST=32kbit
+BURST=32kb
 
 # Utility Function
 function go() {
