@@ -98,7 +98,8 @@ else
         go tc qdisc add dev $INTERFACE handle ffff: ingress
         go tc filter add dev $INTERFACE parent ffff: protocol ip u32 match u32 0 0 \
                                         action mirred egress redirect dev $VIRTUAL
-
+        go tc filter add dev $INTERFACE parent ffff: protocol ipv6 u32 match u32 0 0 \
+                                        action mirred egress redirect dev $VIRTUAL
 
         # INCOMING
         # Speed
